@@ -502,6 +502,10 @@ public final class MagazineLayout: UICollectionViewLayout {
     at elementIndexPath: IndexPath)
     -> UICollectionViewLayoutAttributes?
   {
+    guard !elementIndexPath.isEmpty else {
+        return nil
+    }
+
     if modelState.sectionIndicesToInsert.contains(elementIndexPath.section) {
       let attributes = layoutAttributesForSupplementaryView(
         ofKind: elementKind,
