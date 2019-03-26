@@ -37,7 +37,7 @@ open class MagazineLayoutCollectionReusableView: UICollectionReusableView {
     -> UICollectionViewLayoutAttributes
   {
     guard let attributes = layoutAttributes as? MagazineLayoutCollectionViewLayoutAttributes else {
-      assertionFailure("`layoutAttributes` must be an instance of `MagazineLayoutCollectionViewLayoutAttributes`")
+//       assertionFailure("`layoutAttributes` must be an instance of `MagazineLayoutCollectionViewLayoutAttributes`")
       return super.preferredLayoutAttributesFitting(layoutAttributes)
     }
 
