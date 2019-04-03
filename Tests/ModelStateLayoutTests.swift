@@ -455,7 +455,7 @@ final class ModelStateLayoutTests: XCTestCase {
       expectedBackgroundFrames1: expectedBackgroundFrames3)
   }
 
-  func testReplacingFooters() {
+  func testReplacingFooter() {
     modelState.removeFooter(forSectionAtIndex: 0)
 
     let expectedItemFrames0: [CGRect] = [

@@ -17,7 +17,7 @@ import CoreGraphics
 
 // MARK: - MagazineLayoutSupplementaryViewVisibilityMode
 
-/// Represents the visibility mode for a supplementary views(headers/footers).
+/// Represents the visibility mode for a supplementary view (headers and footers).
 public enum MagazineLayoutSupplementaryViewVisibilityMode {
 
   /// This visibility mode will cause the view to be displayed using the specified height mode in
@@ -37,7 +37,7 @@ public enum MagazineLayoutSupplementaryViewHeightMode {
   /// This height mode will force the view to be displayed with a height equal to `height`.
   ///
   /// To properly support multiline labels, dynamic type, and other technologies that could affect
-  /// the height of your headers dynamically, consider using the `dynamic` height mode.
+  /// the height of your supplementary views dynamically, consider using the `dynamic` height mode.
   case `static`(height: CGFloat)
 
   /// This height mode will cause the view to self-size in the vertical direction.

@@ -38,6 +38,7 @@ struct SectionModel {
     headerAndItemsHeight = 0
 
     indexOfFirstInvalidatedItem = 0
+    isFooterInvalidated = false
 
     recomputeItemPositionsIfNecessary()
   }
@@ -97,7 +98,7 @@ struct SectionModel {
   }
 
   mutating func calculateFrameForFooter() -> CGRect? {
-    guard let footerModel = footerModel else { return nil }
+    guard footerModel != nil else { return nil }
 
     if
       let indexOfFirstInvalidatedItem = indexOfFirstInvalidatedItem,
@@ -106,19 +107,26 @@ struct SectionModel {
       recomputeItemPositionsIfNecessary()
     }
 
-    if footerInvalidated {
+    if isFooterInvalidated {
       recomputeItemPositionsIfNecessary()
     }
 
-    return CGRect(
-      origin: CGPoint(x: footerModel.originInSection.x, y: footerModel.originInSection.y),
-      size: footerModel.size)
+    // `footerModel` is a value type that might be mutated in `recomputeItemPositionsIfNecessary`,
+    // so we can't use a copy made before that code executes (for example, in a
+    // `guard let footerModel = footerModel else { ... }` at the top of this function).
+    if let footerModel = footerModel {
+      return CGRect(
+        origin: CGPoint(x: footerModel.originInSection.x, y: footerModel.originInSection.y),
+        size: footerModel.size)
+    } else {
+      return nil
+    }
   }
 
   mutating func calculateFrameForBackground() -> CGRect? {
     guard backgroundModel != nil else { return nil }
 
-    if indexOfFirstInvalidatedItem != nil || footerInvalidated {
+    if indexOfFirstInvalidatedItem != nil || isFooterInvalidated {
       recomputeItemPositionsIfNecessary()
     }
 
@@ -223,7 +231,7 @@ struct SectionModel {
       self.footerModel?.preferredHeight = oldPreferredHeight
     }
 
-    footerInvalidated = true
+    isFooterInvalidated = true
   }
 
   mutating func removeHeader() {
@@ -235,7 +243,7 @@ struct SectionModel {
   mutating func removeFooter() {
     footerModel = nil
 
-    footerInvalidated = true
+    isFooterInvalidated = true
   }
 
   mutating func updateHeaderHeight(toPreferredHeight preferredHeight: CGFloat) {
@@ -247,7 +255,7 @@ struct SectionModel {
   mutating func updateFooterHeight(toPreferredHeight preferredHeight: CGFloat) {
     footerModel?.preferredHeight = preferredHeight
 
-    footerInvalidated = true
+    isFooterInvalidated = true
   }
 
   mutating func setBackground(_ backgroundModel: BackgroundModel) {
@@ -268,7 +276,7 @@ struct SectionModel {
   private var calculatedHeight: CGFloat
   private var headerAndItemsHeight: CGFloat
   private var indexOfFirstInvalidatedItem: Int?
-  private var footerInvalidated = false
+  private var isFooterInvalidated: Bool
 
   private mutating func updateIndexOfFirstInvalidatedItem(
     forChangeToItemAtIndex changedIndex: Int)
@@ -345,8 +353,8 @@ struct SectionModel {
   }
 
   private mutating func recomputeItemPositionsIfNecessary() {
-    if indexOfFirstInvalidatedItem == nil && footerInvalidated {
-      footerInvalidated = false
+    if indexOfFirstInvalidatedItem == nil && isFooterInvalidated {
+      isFooterInvalidated = false
 
       if var newFooterModel = footerModel {
         newFooterModel.size.height = newFooterModel.preferredHeight ?? newFooterModel.size.height
@@ -358,7 +366,7 @@ struct SectionModel {
     }
     guard let startingIndex = indexOfFirstInvalidatedItem else { return }
     indexOfFirstInvalidatedItem = nil
-    footerInvalidated = false
+    isFooterInvalidated = false
 
     guard startingIndex >= 0 && startingIndex <= itemModels.count else {
       assertionFailure("Invalid `startingIndex` / `indexOfFirstInvalidatedItem` (\(startingIndex)).")
