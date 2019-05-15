@@ -368,6 +368,7 @@ public final class MagazineLayout: UICollectionViewLayout {
       }
 
       layoutAttributes.frame = backgroundFrame
+      layoutAttributes.isHidden = backgroundFrame.size.height.isZero || backgroundFrame.size.width.isZero
       layoutAttributesInRect.append(layoutAttributes)
     }
 

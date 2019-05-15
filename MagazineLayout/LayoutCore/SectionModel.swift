@@ -328,6 +328,13 @@ struct SectionModel {
   }
 
   private mutating func calculateElementFramesIfNecessary() {
+    // ensure zero height for an empty section
+    if itemModels.isEmpty && headerModel == nil && footerModel == nil {
+        calculatedHeight = 0
+        backgroundModel?.size.height = 0
+        return
+    }
+
     guard var rowIndex = indexOfFirstInvalidatedRow else { return }
     guard rowIndex >= 0 else {
       assertionFailure("Invalid `rowIndex` / `indexOfFirstInvalidatedRow` (\(rowIndex)).")
