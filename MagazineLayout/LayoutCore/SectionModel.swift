@@ -499,13 +499,9 @@ struct SectionModel {
     calculatedHeight = currentY + (footerModel?.size.height ?? 0) + metrics.sectionInsets.bottom
 
     // Background frame calculations
-    backgroundModel?.originInSection = CGPoint(
-      x: metrics.sectionInsets.left,
-      y: metrics.sectionInsets.top)
+    backgroundModel?.originInSection = .zero
     backgroundModel?.size.width = metrics.width
-    backgroundModel?.size.height = calculatedHeight -
-      metrics.sectionInsets.top -
-      metrics.sectionInsets.bottom
+    backgroundModel?.size.height = calculatedHeight
 
     indexOfFirstInvalidatedRow = nil
   }
